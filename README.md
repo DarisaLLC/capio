@@ -41,11 +41,16 @@ no bulshit ads, promotions or social integration, just pure camera with extended
   - camera timer (3x, 10x)
   
 ### TODO:
+  - back to all auto mode
+  - save user settings
+  - UI\Unit tests (help needed)
+  - 3d motion feature point tracking
+  - inApp tutorial (maybe)
+  - better notifications and UI response feedback
   - torch mode on-off
   - TimeLapse
   - HDR
   - Live
-  - inApp tutorial 
-  - better notifications and UI response feedback
   - settings presets
-  - app's fast access from phone's widgets view
+  - app's fast access from phone's widgets view (if that's even possible?)
+  - AppleWatch support (remote photo app control)
