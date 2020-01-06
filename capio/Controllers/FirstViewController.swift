@@ -104,9 +104,8 @@ class FirstViewController:
     }
 
     override func didReceiveMemoryWarning() {
+        print("[didReceiveMemoryWarning] memory warning happened.")
         super.didReceiveMemoryWarning()
-        onDispose(dealocateViews: false)
-        exit(0)
     }
 
     override func viewDidAppear(_ animated: Bool) {

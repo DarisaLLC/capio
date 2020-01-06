@@ -650,7 +650,10 @@ AVCaptureAudioDataOutputSampleBufferDelegate {
         if activeResolutionFormat == nil {
             setResolution(resolutionFormatsArray.first!)
         }
-        captureSession?.startRunning()
+        
+        DispatchQueue.main.async {
+            self.captureSession?.startRunning()
+        }
     }
 
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
