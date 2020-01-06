@@ -11,6 +11,15 @@ import AVFoundation
 import JQSwiftIcon
 import ScalePicker
 
+extension UISegmentedControl {
+    /// Tint color doesn't have any effect on iOS 13.
+    func setVibrancy() {
+        if #available(iOS 13, *) {
+            selectedSegmentTintColor = UIColor.red.withAlphaComponent(0.3)
+        }
+    }
+}
+
 class CameraOptionsViewController:
 UIViewController,
 ScalePickerDelegate {
@@ -30,7 +39,9 @@ ScalePickerDelegate {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
+        modeSwitch.setVibrancy()
+        
         captureSessionManager.cameraSettingsObservable.subscribe(onNext: { deviceCurrentSettings in
             if self.activeSlider != nil && !self.captureSessionManager.isSettingAdjustble(self.activeSliderType) {
                 self.activeSliderValueObj = self.captureSessionManager.getCameraSettingValueObjForType(self.activeSliderType)

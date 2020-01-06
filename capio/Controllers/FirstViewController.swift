@@ -105,7 +105,7 @@ class FirstViewController:
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        onDispose()
+        onDispose(dealocateViews: false)
         exit(0)
     }
 
@@ -183,7 +183,7 @@ class FirstViewController:
         startStopRecording()
     }
 
-    func captureImage() {
+    @objc func captureImage() {
         if isAppUsable {
             if cameraSecondaryOptions?.timerScale != TimerScales.off  {
                 if (cameraSecondaryOptions?.timerState != TimerStates.ticking) {
@@ -203,18 +203,18 @@ class FirstViewController:
         }
     }
 
-    func startStopRecording() {
+    @objc func startStopRecording() {
         if isAppUsable {
             self.captureSessionManager.startStopRecording()
         }
     }
 
-    func onAppBackgroundStateEnter() {
+    @objc func onAppBackgroundStateEnter() {
         print("[onAppBackgroundStateEnter] start")
         onDispose()
     }
 
-    func handleLongPress(_ gestureRecognizer: UILongPressGestureRecognizer) {
+    @objc func handleLongPress(_ gestureRecognizer: UILongPressGestureRecognizer) {
         if isAppUsable {
             var point: CGPoint = gestureRecognizer.location(in: gestureRecognizer.view)
 
@@ -257,7 +257,7 @@ class FirstViewController:
         }
     }
 
-    func handlerCamViewTap(_ gestureRecognizer: UIGestureRecognizer) {
+    @objc func handlerCamViewTap(_ gestureRecognizer: UIGestureRecognizer) {
         if isAppUsable {
             if (menuHostView != nil && menuHostView.activeMenuType != .none) {
                 if (menuHostView.activeMenuType == .cameraSliderMenu) {
@@ -315,19 +315,19 @@ class FirstViewController:
         }
     }
 
-    func requestPhotoVideoAudioPerms() {
-        let videoAuthState      = AVCaptureDevice.authorizationStatus(forMediaType: AVMediaTypeVideo)
-        let audioAuthState      = AVCaptureDevice.authorizationStatus(forMediaType: AVMediaTypeAudio)
+    @objc func requestPhotoVideoAudioPerms() {
+        let videoAuthState      = AVCaptureDevice.authorizationStatus(for: AVMediaType.video)
+        let audioAuthState      = AVCaptureDevice.authorizationStatus(for: AVMediaType.audio)
         let libraryAuthState    = PHPhotoLibrary.authorizationStatus()
         var isVideoEnabled          = videoAuthState ==  AVAuthorizationStatus.authorized
         var isAudioEnabled          = audioAuthState ==  AVAuthorizationStatus.authorized
         var isPhotoLibraryEnabled   = libraryAuthState == PHAuthorizationStatus.authorized
 
         if  !isAudioEnabled {
-            AVCaptureDevice.requestAccess(forMediaType: AVMediaTypeAudio, completionHandler: { (granted :Bool) -> Void in
+            AVCaptureDevice.requestAccess(for: AVMediaType.audio, completionHandler: { (granted :Bool) -> Void in
                 isAudioEnabled = granted
                 if !isVideoEnabled {
-                    AVCaptureDevice.requestAccess(forMediaType: AVMediaTypeVideo, completionHandler: { (granted :Bool) -> Void in
+                    AVCaptureDevice.requestAccess(for: AVMediaType.video, completionHandler: { (granted :Bool) -> Void in
                         isVideoEnabled = granted
 
                         if (!isPhotoLibraryEnabled) {
@@ -401,7 +401,7 @@ class FirstViewController:
         }
     }
 
-    private func onDispose() {
+    private func onDispose(dealocateViews: Bool = true) {
         print("[onDispose] disposing")
         self.captureSessionManager.onSessionDispose()
         
@@ -412,7 +412,8 @@ class FirstViewController:
         
         //must ALWAY go last. Release all other resources before
         //this for loop
-        if let layers = myCamView.layer.sublayers as [CALayer]? {
+        
+        if dealocateViews, let layers = myCamView.layer.sublayers as [CALayer]? {
             for layer in layers  {
                 layer.removeFromSuperlayer()
             }
@@ -422,8 +423,8 @@ class FirstViewController:
     private func addCoreObservers() {
 
         //each time you spawn application back -> this observer gonna be triggered
-        NotificationCenter.default.addObserver(self, selector: #selector(FirstViewController.requestPhotoVideoAudioPerms), name: .UIApplicationDidBecomeActive, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(FirstViewController.onAppBackgroundStateEnter), name: .UIApplicationDidEnterBackground, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(FirstViewController.requestPhotoVideoAudioPerms), name: UIApplication.didBecomeActiveNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(FirstViewController.onAppBackgroundStateEnter), name: UIApplication.didEnterBackgroundNotification, object: nil)
 
         captureSessionManager.cameraSettingsObservable.subscribe(onNext: { (newCameraSettings: CameraSessionSettings) in
             let isFlashAvailable = newCameraSettings.isFlashAvailable
@@ -436,7 +437,7 @@ class FirstViewController:
                     self.captureSessionManager.flashModeState = (self.cameraSecondaryOptions?.flashModeState)!
                 } else {
                     self.cameraSecondaryOptions?.isFlashAvailable = false
-                    self.captureSessionManager.flashModeState = AVCaptureFlashMode.off
+                    self.captureSessionManager.flashModeState = AVCaptureDevice.FlashMode.off
                 }
 
                 let recordingState = newCameraSettings.recordingState
@@ -446,7 +447,7 @@ class FirstViewController:
 
                         self.cameraSecondaryOptions?.isOrientationSwitchEnabled = false
                         self.cameraSecondaryOptions?.isFlashAvailable = false
-                        self.captureSessionManager.flashModeState = AVCaptureFlashMode.off
+                        self.captureSessionManager.flashModeState = AVCaptureDevice.FlashMode.off
 
                         if (self.videRecordCountdownTimer == nil) {
                             self.startStopVideoCounter(start: true)

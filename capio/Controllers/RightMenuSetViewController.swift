@@ -112,9 +112,9 @@ class RightMenuSetViewController: UIViewController, UIPickerViewDelegate, UIPick
     }
     
     
-    private var _flashModeState: AVCaptureFlashMode  = .off
+    private var _flashModeState: AVCaptureDevice.FlashMode  = .off
 
-    var flashModeState: AVCaptureFlashMode {
+    var flashModeState: AVCaptureDevice.FlashMode {
         set {
             _flashModeState = newValue
             flashModeRawState = _flashModeState.rawValue
@@ -125,11 +125,11 @@ class RightMenuSetViewController: UIViewController, UIPickerViewDelegate, UIPick
         }
     }
     
-    dynamic var flashModeRawState:      Int = 0
+    @objc dynamic var flashModeRawState:      Int = 0
     
-    dynamic var orientationRawState:    Int = 0
+    @objc dynamic var orientationRawState:    Int = 0
     
-    dynamic var gridRawState:           Int = 0
+    @objc dynamic var gridRawState:           Int = 0
     
     dynamic var timerStateRaw:          Int = 0
     
@@ -197,7 +197,7 @@ class RightMenuSetViewController: UIViewController, UIPickerViewDelegate, UIPick
     public func pickerView(_ pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusing view: UIView?) -> UIView {
         let label = UILabel()
         
-        let title = NSAttributedString(string: String(row), attributes: [NSFontAttributeName: UIFont.systemFont(ofSize: 16.0, weight: UIFontWeightRegular)])
+        let title = NSAttributedString(string: String(row), attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 16.0, weight: UIFont.Weight.regular)])
         label.attributedText = title
         label.textColor = UIColor.white
         label.textAlignment = .right
@@ -226,7 +226,7 @@ class RightMenuSetViewController: UIViewController, UIPickerViewDelegate, UIPick
         
     }
     
-    func onOrientationTap(_ recognizer: UIGestureRecognizer) {
+    @objc func onOrientationTap(_ recognizer: UIGestureRecognizer) {
         if (isOrientationSwitchEnabled) {
             let newVal = OrientationStates(rawValue: orientationRawState + 1)
             orientationState = newVal == nil ? OrientationStates.landscapeLocked : newVal!
@@ -235,25 +235,24 @@ class RightMenuSetViewController: UIViewController, UIPickerViewDelegate, UIPick
         }
     }
     
-    func onFlashModeTap(_ recognizer: UIGestureRecognizer) {
+    @objc func onFlashModeTap(_ recognizer: UIGestureRecognizer) {
         if (isFlashAvailable) {
-            let newVal = AVCaptureFlashMode(rawValue: flashModeRawState + 1)
+            let newVal = AVCaptureDevice.FlashMode(rawValue: flashModeRawState + 1)
             //todo: do a better cal for state than <=2
-            flashModeState = newVal != nil && (newVal?.rawValue)! <= 2 ? newVal! : AVCaptureFlashMode.off
+            flashModeState = newVal != nil && (newVal?.rawValue)! <= 2 ? newVal! : AVCaptureDevice.FlashMode.off
             
             setFlashMode(flashModeState)
         }
     }
     
-    func onGridTap(_ recognizer: UIGestureRecognizer) {
+    @objc func onGridTap(_ recognizer: UIGestureRecognizer) {
         let newGridFactor = GridFactor(rawValue: gridRawState + 1)
         //todo: do a better cal for state than <=2
         gridState = newGridFactor ?? .off
-        
         setGridMode(gridState)
     }
     
-    func onTimerTap(_ recogniaer: UIGestureRecognizer) {
+    @objc func onTimerTap(_ recogniaer: UIGestureRecognizer) {
         if (timerState != .ticking) {
             let newTimerScale = TimerScales(rawValue: timerScaleRaw + 1)
             //todo: do a better cal for state than <=2
@@ -311,7 +310,7 @@ class RightMenuSetViewController: UIViewController, UIPickerViewDelegate, UIPick
         })
     }
     
-    private func setFlashMode(_ flashMode: AVCaptureFlashMode) {
+    private func setFlashMode(_ flashMode: AVCaptureDevice.FlashMode) {
         var autoAlpha: CGFloat = 0.0
         var onAlpha: CGFloat = 0.0
         var offAlpha: CGFloat = 0.0

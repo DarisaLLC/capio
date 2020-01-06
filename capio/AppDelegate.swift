@@ -23,7 +23,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CAAnimationDelegate {
     var window: UIWindow?
 
 
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         
         self.window = UIWindow(frame: UIScreen.main.bounds)
@@ -44,7 +44,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CAAnimationDelegate {
         let maskBgView = UIView(frame: firstViewController.view.frame)
         maskBgView.backgroundColor = UIColor.white
         firstViewController.view.addSubview(maskBgView)
-        firstViewController.view.bringSubview(toFront: maskBgView)
+        firstViewController.view.bringSubviewToFront(maskBgView)
 
         // logo mask animation
         let transformAnimation = CAKeyframeAnimation(keyPath: "bounds")
@@ -57,15 +57,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CAAnimationDelegate {
         let finalBounds = NSValue(cgRect: CGRect(x: 0, y: 0, width: 5000, height: 5000))
         transformAnimation.values = [initalBounds, secondBounds, thirdBounds, finalBounds]
         transformAnimation.keyTimes = [0, 0.3, 0.6, 1]
-        transformAnimation.timingFunctions = [CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut), CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseOut)]
+        transformAnimation.timingFunctions = [CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeInEaseOut), CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeOut)]
         transformAnimation.isRemovedOnCompletion = false
-        transformAnimation.fillMode = kCAFillModeForwards
+        transformAnimation.fillMode = CAMediaTimingFillMode.forwards
         firstViewController.view.layer.mask?.add(transformAnimation, forKey: "maskAnimation")
 
         // logo mask background view animation
         UIView.animate(withDuration: 0.1,
                        delay: 1.35,
-                       options: UIViewAnimationOptions.curveEaseIn,
+                       options: UIView.AnimationOptions.curveEaseIn,
                        animations: {
                         maskBgView.alpha = 0.0
                        },
@@ -83,7 +83,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CAAnimationDelegate {
                        completion: { finished in
                         UIView.animate(withDuration: 0.3,
                                        delay: 0.0,
-                                       options: UIViewAnimationOptions.curveEaseInOut,
+                                       options: UIView.AnimationOptions.curveEaseInOut,
                                        animations: {
                                         self.window!.rootViewController!.view.transform = .identity
                                        },

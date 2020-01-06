@@ -19,7 +19,7 @@ class CaptureSessionManager:
     NSObject,
     AVCaptureFileOutputRecordingDelegate,
     AVCapturePhotoCaptureDelegate,
-    AVCaptureAudioDataOutputSampleBufferDelegate {
+AVCaptureAudioDataOutputSampleBufferDelegate {
 
     //this is how a roll singletons here
     static let sharedInstance : CaptureSessionManager = {
@@ -41,7 +41,7 @@ class CaptureSessionManager:
         var updateInsureTimer:              Timer!
         var updateInsureTimerInterval:      Double
 
-        dynamic var accValue:               Float   = 0.0
+        @objc dynamic var accValue:               Float   = 0.0
 
         private var currentlyAccValsArray:  Array   = [Float]()
 
@@ -226,11 +226,11 @@ class CaptureSessionManager:
         }
     }
 
-    var currentColorTemperature:                AVCaptureWhiteBalanceTemperatureAndTintValues!
-    var currentColorGains:                      AVCaptureWhiteBalanceGains!
+    var currentColorTemperature:                AVCaptureDevice.WhiteBalanceTemperatureAndTintValues!
+    var currentColorGains:                      AVCaptureDevice.WhiteBalanceGains!
 
-    var isFlashAvailable:                       Bool            = true
-    var flashModeState:                         AVCaptureFlashMode  = .off
+    @objc dynamic var isFlashAvailable:                       Bool            = true
+    var flashModeState:                         AVCaptureDevice.FlashMode  = .off
 
     func isSettingAdjustble(_ settingType: CameraOptionsTypes) -> Bool {
         switch(settingType) {
@@ -381,15 +381,15 @@ class CaptureSessionManager:
 
     func onSessionDispose() {
         captureSession?.stopRunning()
-        
+
         if captureVideoOut != nil && (captureVideoOut?.isRecording)! {
             stopRecording()
         }
-        
+
         if captureDevice != nil {
             setAndEmitCameraSettings(captureDevice!);
         }
-        
+
         if let inputs = captureSession?.inputs as? [AVCaptureDeviceInput] {
             for input in inputs {
                 captureSession?.removeInput(input)
@@ -454,7 +454,7 @@ class CaptureSessionManager:
         if (newResolutionFormat != activeResolutionFormat) {
             isIsoLocked     = false
             isShutterLocked = false
-            
+
             activeResolutionFormat = newResolutionFormat
 
             if (self.captureVideoOut?.isRecording)! {
@@ -475,7 +475,7 @@ class CaptureSessionManager:
             } catch {
                 print(error)
             }
-            
+
             setAndEmitCameraSettings(self.captureDevice!)
         }
     }
@@ -502,9 +502,9 @@ class CaptureSessionManager:
         // it will not get muted thanks to that AND! setAudioSession
         captureSession?.automaticallyConfiguresApplicationAudioSession = false
         // todo -> write getter for Preset (device based)
-        captureSession?.sessionPreset = AVCaptureSessionPreset1920x1080
+        captureSession?.sessionPreset = AVCaptureSession.Preset.hd1920x1080
 
-        captureDevice = AVCaptureDevice.defaultDevice(withMediaType: AVMediaTypeVideo)
+        captureDevice = AVCaptureDevice.default(for: .video)
     }
 
     private func setAudioSession() {
@@ -513,15 +513,15 @@ class CaptureSessionManager:
             audioSession = AVAudioSession.sharedInstance()
             // in case you have music plaing in your phone
             // it will not get muted thanks to that AND! automaticallyConfiguresApplicationAudioSession
-            try audioSession?.setCategory(AVAudioSessionCategoryPlayAndRecord, with: .mixWithOthers)
-            let currentOutputPortNames = (audioSession?.currentRoute as AVAudioSessionRouteDescription!).outputs
-            var currentOutputPortName = AVAudioSessionPortBuiltInSpeaker
-            if (currentOutputPortNames.count > 0) {
-                currentOutputPortName  = (currentOutputPortNames[0] as AVAudioSessionPortDescription!).portName
+            try audioSession?.setCategory(.playAndRecord, options: .mixWithOthers)
+            let currentOutputPortNames = (audioSession?.currentRoute as AVAudioSessionRouteDescription?)?.outputs
+            var currentOutputPortName = AVAudioSession.Port.builtInSpeaker
+            if (currentOutputPortNames!.count > 0) {
+                currentOutputPortName  = AVAudioSession.Port(rawValue: (currentOutputPortNames?[0] as AVAudioSessionPortDescription?)!.portName)
             }
 
-            if (currentOutputPortName == AVAudioSessionPortBuiltInSpeaker || currentOutputPortName == AVAudioSessionPortBuiltInReceiver) {
-                try audioSession?.overrideOutputAudioPort(AVAudioSessionPortOverride.speaker)
+            if (currentOutputPortName == AVAudioSession.Port.builtInSpeaker || currentOutputPortName == AVAudioSession.Port.builtInReceiver) {
+                try audioSession?.overrideOutputAudioPort(AVAudioSession.PortOverride.speaker)
             }
 
             try audioSession!.setActive(true)
@@ -549,12 +549,12 @@ class CaptureSessionManager:
         captureSession?.addInput(videoDeviceInput)
 
         //setting audio
-        let audioDevice = AVCaptureDevice.defaultDevice(withMediaType: AVMediaTypeAudio)
+        let audioDevice = AVCaptureDevice.default(for: .audio)
 
         let audioDeviceInput: AVCaptureDeviceInput
 
         do {
-            audioDeviceInput = try AVCaptureDeviceInput(device: audioDevice)
+            audioDeviceInput = try AVCaptureDeviceInput(device: audioDevice!)
 
             try captureSession?.canAddInput(audioDeviceInput)
         }
@@ -571,16 +571,16 @@ class CaptureSessionManager:
 
         captureStillImageOut = AVCapturePhotoOutput()
 
-        guard (captureSession?.canAddOutput(captureStillImageOut))! else {
+        guard (captureSession?.canAddOutput(captureStillImageOut!))! else {
             fatalError()
         }
 
-        captureSession?.addOutput(captureStillImageOut)
+        captureSession?.addOutput(captureStillImageOut!)
 
         captureStillImageOut?.isHighResolutionCaptureEnabled = true
 
-        previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
-        previewLayer?.videoGravity = AVLayerVideoGravityResizeAspect
+        previewLayer = AVCaptureVideoPreviewLayer(session: captureSession!)
+        previewLayer?.videoGravity = AVLayerVideoGravity.resizeAspect
         previewLayer?.frame = camView.bounds
 
         camView.layer.addSublayer((previewLayer)!)
@@ -599,18 +599,18 @@ class CaptureSessionManager:
 
         captureVideoOut = AVCaptureMovieFileOutput()
 
-        if(captureSession?.canAddOutput(captureVideoOut) != nil) {
+        if(captureSession?.canAddOutput(captureVideoOut!) != nil) {
             captureVideoOut?.minFreeDiskSpaceLimit = 1024 * 1024
-            captureVideoOut?.movieFragmentInterval = kCMTimeInvalid
+            captureVideoOut?.movieFragmentInterval = CMTime.invalid
 
-            captureSession?.addOutput(captureVideoOut)
+            captureSession?.addOutput(captureVideoOut!)
         } else {
             fatalError()
         }
 
         //reseting res array
         resolutionFormatsArray = [ResolutionFormat]()
-        for vFormat in self.captureDevice!.formats as! [AVCaptureDeviceFormat] {
+        for vFormat in self.captureDevice!.formats as! [AVCaptureDevice.Format] {
 
             let formatDescription = CMVideoFormatDescriptionGetDimensions(vFormat.formatDescription)
 
@@ -727,7 +727,7 @@ class CaptureSessionManager:
         )
     }
 
-    private func getExposureFromValue(value: Float, activeFormat: AVCaptureDeviceFormat) -> CMTime {
+    private func getExposureFromValue(value: Float, activeFormat: AVCaptureDevice.Format) -> CMTime {
         let minDurationSeconds: Double = max(CMTimeGetSeconds(activeFormat.minExposureDuration), EXPOSURE_MINIMUM_DURATION);
         let maxDurationSeconds: Double = CMTimeGetSeconds(activeFormat.maxExposureDuration);
 
@@ -761,17 +761,17 @@ class CaptureSessionManager:
         let maxDurationSeconds: Double = CMTimeGetSeconds(captureDevice!.activeFormat.maxExposureDuration);
         let newSecondsAmount = min(0.16, p * ( maxDurationSeconds - minDurationSeconds ) + minDurationSeconds)
 
-        exposureDuration = CMTimeMakeWithSeconds(Float64(newSecondsAmount), 1000*1000*1000); // Scale from 0-1 slider range to actual duration
+        exposureDuration = CMTimeMakeWithSeconds(Float64(newSecondsAmount), preferredTimescale: 1000*1000*1000); // Scale from 0-1 slider range to actual duration
     }
 
     //Take the actual temperature value
     private func changeTemperatureRaw(_ temperature: Float) {
-        currentColorTemperature = AVCaptureWhiteBalanceTemperatureAndTintValues(temperature: temperature, tint: 0.0)
+        currentColorTemperature = AVCaptureDevice.WhiteBalanceTemperatureAndTintValues(temperature: temperature, tint: 0.0)
         currentColorGains = captureDevice!.deviceWhiteBalanceGains(for: currentColorTemperature)
     }
 
     // Normalize the gain so it does not exceed
-    private func normalizedGains(_ gains: AVCaptureWhiteBalanceGains) -> AVCaptureWhiteBalanceGains {
+    private func normalizedGains(_ gains: AVCaptureDevice.WhiteBalanceGains) -> AVCaptureDevice.WhiteBalanceGains {
         var g = gains;
         g.redGain = max(1.0, g.redGain);
         g.greenGain = max(1.0, g.greenGain);
@@ -804,7 +804,7 @@ class CaptureSessionManager:
             }
         }
 
-        captureVideoOut?.startRecording(toOutputFileURL: outputUrl as URL!, recordingDelegate: self)
+        captureVideoOut?.startRecording(to: (outputUrl as URL?)!, recordingDelegate: self)
     }
 
     private func stopRecording() {
@@ -872,13 +872,13 @@ class CaptureSessionManager:
                     break
             }
 
-            guard let videoConnection = self.captureVideoOut?.connection(withMediaType: AVMediaTypeVideo) else {
+            guard let videoConnection = self.captureVideoOut?.connection(with: AVMediaType.video) else {
                 return
             }
 
             videoConnection.videoOrientation = self.currentPreviewLayerOrientation
 
-            guard let photoConnection = self.captureStillImageOut?.connection(withMediaType: AVMediaTypeVideo) else {
+            guard let photoConnection = self.captureStillImageOut?.connection(with: AVMediaType.video) else {
                 return
             }
 
@@ -905,7 +905,7 @@ class CaptureSessionManager:
         if (captureDevice?.isFlashAvailable)! {
             settings.flashMode = flashModeState
         } else {
-            settings.flashMode = AVCaptureFlashMode.off
+            settings.flashMode = AVCaptureDevice.FlashMode.off
         }
 
         settings.isHighResolutionPhotoEnabled = true
@@ -917,7 +917,7 @@ class CaptureSessionManager:
     }
 
     // photo success/fail save
-    func onImageSaved(_ savedImage: UIImage, didFinishSavingWithError error: NSError?, contextInfo:UnsafeRawPointer) {
+    @objc func onImageSaved(_ savedImage: UIImage, didFinishSavingWithError error: NSError?, contextInfo:UnsafeRawPointer) {
         if error == nil {
             //coz you need to run UIKit opeartions on main thread
             DispatchQueue.main.async {
@@ -947,10 +947,10 @@ class CaptureSessionManager:
     }
 
     //photo is being captured right here
-    @objc(captureOutput:didFinishProcessingPhotoSampleBuffer:previewPhotoSampleBuffer:resolvedSettings:bracketSettings:error:) func capture(
+    @objc(captureOutput:didFinishProcessingPhotoSampleBuffer:previewPhotoSampleBuffer:resolvedSettings:bracketSettings:error:) func photoOutput(
         _ captureOutput: AVCapturePhotoOutput,
-        didFinishProcessingPhotoSampleBuffer photoSampleBuffer: CMSampleBuffer?,
-        previewPhotoSampleBuffer: CMSampleBuffer?,
+        didFinishProcessingPhoto photoSampleBuffer: CMSampleBuffer?,
+        previewPhoto previewPhotoSampleBuffer: CMSampleBuffer?,
         resolvedSettings: AVCaptureResolvedPhotoSettings,
         bracketSettings racketSettings: AVCaptureBracketedStillImageSettings?, error: Error?) {
 
@@ -971,51 +971,50 @@ class CaptureSessionManager:
         }
     }
     //video is being captured right here
-    func capture(
-        _ captureOutput: AVCaptureFileOutput!,
-        didFinishRecordingToOutputFileAt fileURL: URL!,
-        fromConnections connections: [Any]!,
-        error: Error!
-        ) {
+
+    func fileOutput(
+        _ captureOutput: AVCaptureFileOutput,
+        didFinishRecordingTo fileURL: URL,
+        from connections: [AVCaptureConnection],
+        error: Error?) {
 
         if (error != nil) {
-            //finish loading message is being written in error obj for what ever reason
-            // todo: test for space limit
-            print("error: " + error.localizedDescription)
+           //finish loading message is being written in error obj for what ever reason
+           // todo: test for space limit
+            print("error: " + error!.localizedDescription)
         }
 
         PHPhotoLibrary.shared().performChanges({
-            PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: fileURL)})
+           PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: fileURL)})
         { completed, error in
-            if completed {
-                print("Video asset created")
-                //coz you need to run UIKit opeartions on main thread
-                DispatchQueue.main.async {
-                    let banner = Banner(
-                        title: "Swells!",
-                        subtitle: "You made a video!",
-                        backgroundColor: UIColor(red:13.00/255.0, green:13.0/255.0, blue:13.5/255.0, alpha:0.500))
-                    banner.dismissesOnTap = true
-                    banner.show(duration: 1.0)
-                }
-            } else {
-                print(error?.localizedDescription ?? "PHPhotoLibrary.requestAuthorization did not worked out")
+           if completed {
+               print("Video asset created")
+               //coz you need to run UIKit opeartions on main thread
+               DispatchQueue.main.async {
+                   let banner = Banner(
+                       title: "Swells!",
+                       subtitle: "You made a video!",
+                       backgroundColor: UIColor(red:13.00/255.0, green:13.0/255.0, blue:13.5/255.0, alpha:0.500))
+                   banner.dismissesOnTap = true
+                   banner.show(duration: 1.0)
+               }
+           } else {
+               print(error?.localizedDescription ?? "PHPhotoLibrary.requestAuthorization did not worked out")
 
-                //coz you need to run UIKit opeartions on main thread
-                DispatchQueue.main.async {
-                    let errorBanner = Banner(
-                        title: "Damn!",
-                        subtitle: "no luck saving dat :(",
-                        backgroundColor: UIColor(red:188.00/255.0, green:16.0/255.0, blue:16.5/255.0, alpha:0.500))
-                    errorBanner.dismissesOnTap = true
-                    errorBanner.show(duration: 1.5)
-                }
-            }
+               //coz you need to run UIKit opeartions on main thread
+               DispatchQueue.main.async {
+                   let errorBanner = Banner(
+                       title: "Damn!",
+                       subtitle: "no luck saving dat :(",
+                       backgroundColor: UIColor(red:188.00/255.0, green:16.0/255.0, blue:16.5/255.0, alpha:0.500))
+                   errorBanner.dismissesOnTap = true
+                   errorBanner.show(duration: 1.5)
+               }
+           }
         }
     }
 
     private func setAndEmitCameraSettings(_ captureDevice: AVCaptureDevice) {
-
         if !isSettingAdjustble(CameraOptionsTypes.iso) {
             isoValue = getValueWithinRange(
                 value: captureDevice.iso,
@@ -1026,7 +1025,7 @@ class CaptureSessionManager:
 
         if !isSettingAdjustble(CameraOptionsTypes.temperature) {
             currentColorGains = captureDevice.deviceWhiteBalanceGains
-            currentColorTemperature = captureDevice.temperatureAndTintValues(forDeviceWhiteBalanceGains: currentColorGains)
+            currentColorTemperature = captureDevice.temperatureAndTintValues(for: currentColorGains)
             temperatureValue = currentColorTemperature.temperature
         }
 
@@ -1044,9 +1043,9 @@ class CaptureSessionManager:
         if !isSettingAdjustble(CameraOptionsTypes.focus) {
             focusDistance = captureDevice.lensPosition
         }
-        
+
         isFlashAvailable = captureDevice.isFlashAvailable
-        
+
         //todo: guess need to trigger this only if anything is changed actually
         cameraSettingsObservable.onNext(CameraSessionSettings.init(
             _iso:               isoValue,
@@ -1067,17 +1066,17 @@ class CaptureSessionManager:
                 try device.lockForConfiguration()
 
                 if (device.focusMode == .locked) {
-                    device.setFocusModeLockedWithLensPosition(focusDistance, completionHandler: { (time) -> Void in })
+                    device.setFocusModeLocked(lensPosition: focusDistance, completionHandler: { (time) -> Void in })
                 }
 
                 //iso and shutter
                 if (device.exposureMode == .custom) {
-                    device.setExposureModeCustomWithDuration(exposureDuration, iso: isoValue, completionHandler: { (time) -> Void in })
+                    device.setExposureModeCustom(duration: exposureDuration, iso: isoValue, completionHandler: { (time) -> Void in })
                 }
 
                 //temperature
                 if (device.whiteBalanceMode == .locked) {
-                    device.setWhiteBalanceModeLockedWithDeviceWhiteBalanceGains(normalizedGains(currentColorGains), completionHandler: { (time) -> Void in })
+                    device.setWhiteBalanceModeLocked(with: normalizedGains(currentColorGains), completionHandler: { (time) -> Void in })
 
                 }
 
@@ -1106,22 +1105,22 @@ class CameraSessionSettings {
     let shutter:            Float
     let temperature:        Float
     let focusdistance:      Float
-    let flashModeState:     AVCaptureFlashMode
+    let flashModeState:     AVCaptureDevice.FlashMode
     let isFlashAvailable:   Bool
     let recordingState:     RecordingStates
-    
-    let activeResFormat:    ResolutionFormat?    
+
+    let activeResFormat:    ResolutionFormat?
 
     init (
         _iso:               Float                   = 0.0,
         _shutter:           Float                   = 0.0,
         _temperature:       Float                   = 1000,
         _focusdistance:     Float                   = 0.0,
-        _flashModeState:    AVCaptureFlashMode      = .off,
+        _flashModeState:    AVCaptureDevice.FlashMode      = .off,
         _isFlashAvailable:  Bool                    = true,
         _recordingState:    RecordingStates         = .off,
         _activeResFormat:   ResolutionFormat?       = nil
-        
+
         ) {
         iso              = 	_iso
         shutter          = 	_shutter
@@ -1158,10 +1157,10 @@ class ResolutionFormat: NSObject {
     let fpsRange:         AVFrameRateRange!
     let isSlomo:          Bool!
     var isActive:         Bool    = false
-    let format:           AVCaptureDeviceFormat!
+    let format:           AVCaptureDevice.Format!
     let name:             String!
-    
-    init(_format: AVCaptureDeviceFormat, _frameRateObj: AVFrameRateRange) {
+
+    init(_format: AVCaptureDevice.Format, _frameRateObj: AVFrameRateRange) {
         videoResolution   = CMVideoFormatDescriptionGetDimensions(_format.formatDescription)
         photoResolution   = _format.highResolutionStillImageDimensions
         fpsRange          = _frameRateObj

@@ -16,11 +16,11 @@
 		3779378E1D45A33E004C86A4 /* Pods_capio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 377937891D45A335004C86A4 /* Pods_capio.framework */; };
 		37D63F791D45A608009CD6D9 /* CameraOptionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37D63F781D45A608009CD6D9 /* CameraOptionsViewController.swift */; };
 		37E25FF91D32DB6D00644207 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37E25FF81D32DB6D00644207 /* AppDelegate.swift */; };
-		37E260001D32DB6D00644207 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 37E25FFE1D32DB6D00644207 /* Main.storyboard */; };
 		37E260021D32DB6D00644207 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 37E260011D32DB6D00644207 /* Assets.xcassets */; };
-		37E260051D32DB6D00644207 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 37E260031D32DB6D00644207 /* LaunchScreen.storyboard */; };
 		37E260101D32DB6D00644207 /* capioTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37E2600F1D32DB6D00644207 /* capioTests.swift */; };
 		37E2601B1D32DB6D00644207 /* capioUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37E2601A1D32DB6D00644207 /* capioUITests.swift */; };
+		BBA0B52B2349CB6D00929EBD /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 37E25FFF1D32DB6D00644207 /* Main.storyboard */; };
+		BBA0B52C2349CB6D00929EBD /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 37E260041D32DB6D00644207 /* LaunchScreen.storyboard */; };
 		BBBCEF9721F1789C00D6E5BE /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BBBCEF7321F1789C00D6E5BE /* LaunchScreen.storyboard */; };
 		BBBCEF9821F1789C00D6E5BE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BBBCEF7421F1789C00D6E5BE /* Main.storyboard */; };
 		BBBCEF9E21F1789C00D6E5BE /* CaptureSessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBBCEF7C21F1789C00D6E5BE /* CaptureSessionManager.swift */; };
@@ -173,9 +173,9 @@
 		37E25FF51D32DB6D00644207 /* capio.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = capio.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		37E25FF81D32DB6D00644207 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		37E25FFA1D32DB6D00644207 /* FirstViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstViewController.swift; sourceTree = "<group>"; };
-		37E25FFF1D32DB6D00644207 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Main.storyboard; sourceTree = "<group>"; };
+		37E25FFF1D32DB6D00644207 /* Main.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		37E260011D32DB6D00644207 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		37E260041D32DB6D00644207 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
+		37E260041D32DB6D00644207 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		37E260061D32DB6D00644207 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		37E2600B1D32DB6D00644207 /* capioTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = capioTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		37E2600F1D32DB6D00644207 /* capioTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = capioTests.swift; sourceTree = "<group>"; };
@@ -293,8 +293,8 @@
 		37B419561DB6AC9A0082C29C /* UI */ = {
 			isa = PBXGroup;
 			children = (
-				37E25FFE1D32DB6D00644207 /* Main.storyboard */,
-				37E260031D32DB6D00644207 /* LaunchScreen.storyboard */,
+				37E25FFF1D32DB6D00644207 /* Main.storyboard */,
+				37E260041D32DB6D00644207 /* LaunchScreen.storyboard */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -508,6 +508,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 				Base,
 			);
@@ -642,12 +643,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				37E260051D32DB6D00644207 /* LaunchScreen.storyboard in Resources */,
+				BBA0B52C2349CB6D00929EBD /* LaunchScreen.storyboard in Resources */,
 				BBBCEF9821F1789C00D6E5BE /* Main.storyboard in Resources */,
 				BBBCEF9721F1789C00D6E5BE /* LaunchScreen.storyboard in Resources */,
 				37E260021D32DB6D00644207 /* Assets.xcassets in Resources */,
-				BBBCEF9B21F1789C00D6E5BE /* logo.png in Resources */,
-				37E260001D32DB6D00644207 /* Main.storyboard in Resources */,
+				BBA0B52B2349CB6D00929EBD /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -689,13 +689,16 @@
 			files = (
 			);
 			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
 			);
 			name = "[CP] Check Pods Manifest.lock";
 			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-capio-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
 		5B93830BF9FAD84497C56FA7 /* [CP] Embed Pods Frameworks */ = {
@@ -704,9 +707,16 @@
 			files = (
 			);
 			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-capioTests/Pods-capioTests-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/RxSwift/RxSwift.framework",
+				"${BUILT_PRODUCTS_DIR}/RxBlocking/RxBlocking.framework",
+				"${BUILT_PRODUCTS_DIR}/RxTest/RxTest.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxSwift.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxBlocking.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxTest.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -719,13 +729,16 @@
 			files = (
 			);
 			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
 			);
 			name = "[CP] Check Pods Manifest.lock";
 			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-capioTests-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
 		9A219E4D1515A70968F6852D /* [CP] Embed Pods Frameworks */ = {
@@ -734,9 +747,28 @@
 			files = (
 			);
 			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-capio/Pods-capio-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/BRYXBanner/BRYXBanner.framework",
+				"${BUILT_PRODUCTS_DIR}/CariocaMenu/CariocaMenu.framework",
+				"${BUILT_PRODUCTS_DIR}/ElasticTransition/ElasticTransition.framework",
+				"${BUILT_PRODUCTS_DIR}/JQSwiftIcon/JQSwiftIcon.framework",
+				"${BUILT_PRODUCTS_DIR}/MotionAnimation/MotionAnimation.framework",
+				"${BUILT_PRODUCTS_DIR}/RxCocoa/RxCocoa.framework",
+				"${BUILT_PRODUCTS_DIR}/RxRelay/RxRelay.framework",
+				"${BUILT_PRODUCTS_DIR}/RxSwift/RxSwift.framework",
+				"${BUILT_PRODUCTS_DIR}/ScalePicker/ScalePicker.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/BRYXBanner.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/CariocaMenu.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ElasticTransition.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/JQSwiftIcon.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MotionAnimation.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxCocoa.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxRelay.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxSwift.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ScalePicker.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -764,13 +796,16 @@
 			files = (
 			);
 			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
 			);
 			name = "[CP] Check Pods Manifest.lock";
 			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-capioUITests-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
 		C7E44A153E5FDB7F711506C1 /* [CP] Copy Pods Resources */ = {
@@ -856,25 +891,6 @@
 			targetProxy = 37E260171D32DB6D00644207 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
-
-/* Begin PBXVariantGroup section */
-		37E25FFE1D32DB6D00644207 /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				37E25FFF1D32DB6D00644207 /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
-		37E260031D32DB6D00644207 /* LaunchScreen.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				37E260041D32DB6D00644207 /* Base */,
-			);
-			name = LaunchScreen.storyboard;
-			sourceTree = "<group>";
-		};
-/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		37E2601D1D32DB6D00644207 /* Debug */ = {
@@ -998,10 +1014,11 @@
 				DEVELOPMENT_TEAM = 2N23H46X83;
 				INFOPLIST_FILE = capio/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MARKETING_VERSION = 1.0.5;
 				PRODUCT_BUNDLE_IDENTIFIER = com.theromanapps.capio;
 				PRODUCT_NAME = capio;
 				PROVISIONING_PROFILE = "";
-				SWIFT_VERSION = 3.0;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
@@ -1017,10 +1034,11 @@
 				DEVELOPMENT_TEAM = 2N23H46X83;
 				INFOPLIST_FILE = capio/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MARKETING_VERSION = 1.0.5;
 				PRODUCT_BUNDLE_IDENTIFIER = com.theromanapps.capio;
 				PRODUCT_NAME = capio;
 				PROVISIONING_PROFILE = "";
-				SWIFT_VERSION = 3.0;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
@@ -1034,7 +1052,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.theroman.capioTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 3.0;
+				SWIFT_VERSION = 5.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/capio.app/capio";
 			};
 			name = Debug;
@@ -1048,7 +1066,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.theroman.capioTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 3.0;
+				SWIFT_VERSION = 5.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/capio.app/capio";
 			};
 			name = Release;
@@ -1061,7 +1079,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.theroman.capioUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 3.0;
+				SWIFT_VERSION = 5.0;
 				TEST_TARGET_NAME = capio;
 			};
 			name = Debug;
@@ -1074,7 +1092,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.theroman.capioUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 3.0;
+				SWIFT_VERSION = 5.0;
 				TEST_TARGET_NAME = capio;
 			};
 			name = Release;
