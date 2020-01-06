@@ -39,7 +39,7 @@ class ResolutionSideMenuViewController:
     
     func pickerView(_ pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusing view: UIView?) -> UIView {
         
-        var pickerCell = view as! ResPickerView!
+        var pickerCell = view as! ResPickerView?
         if pickerCell == nil {
             pickerCell = ResPickerView.init(frame: CGRect.init(x: 0, y: 0, width: 50, height: 80),
                                             _name: self.captureSessionManager.resolutionFormatsArray[row].name,
@@ -70,7 +70,7 @@ class ResolutionSideMenuViewController:
         processSubscribers()
     }
     
-    open func onShowResOptions(_ gestureRecognizer: UITapGestureRecognizer) {
+    @objc open func onShowResOptions(_ gestureRecognizer: UITapGestureRecognizer) {
 
         if (gestureRecognizer.state == .ended) {
             DispatchQueue.global(qos: .userInteractive).async {
