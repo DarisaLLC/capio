@@ -50,11 +50,6 @@ class CameraMenuContentController: UITableViewController, CariocaMenuDataSource 
         isOpened = false
     }
     
-    func menuToDefault() {
-        cariocaMenu?.selectedIndexPath = IndexPath(row: menuNames.count - 1, section: 0)
-        cariocaMenu?.showIndicator(.right, position: .bottom, offset: -50)
-    }
-
     // MARK: - Table view data source
     
     override func numberOfSections(in tableView: UITableView) -> Int {
