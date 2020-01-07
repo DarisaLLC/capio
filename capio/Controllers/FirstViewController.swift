@@ -104,15 +104,16 @@ class FirstViewController:
     }
 
     override func didReceiveMemoryWarning() {
+        print("[didReceiveMemoryWarning] memory warning happened.")
         super.didReceiveMemoryWarning()
-        onDispose(dealocateViews: false)
-        exit(0)
     }
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 
-        optionsMenu?.addInView(self.view)
+        if (optionsMenu?.hostView == nil) {
+            optionsMenu?.addInView(self.view)
+        }
 
         gridManager = GridManager.init(gridView: gridHostView, storyBoard: self.storyboard!, parentViewDimensions: gridHostView.bounds)
     }
@@ -261,7 +262,7 @@ class FirstViewController:
         if isAppUsable {
             if (menuHostView != nil && menuHostView.activeMenuType != .none) {
                 if (menuHostView.activeMenuType == .cameraSliderMenu) {
-                    cariocaMenuViewController?.menuToDefault()
+                    self.toggleCariocaIndicatorPin()
                 }
                 hideActiveSetting() {_ in
                     print("Done hiding from tap")
@@ -299,7 +300,7 @@ class FirstViewController:
         if isAppUsable {
             if (menuHostView.activeMenuType != .resolutionMenu) {
                 if (menuHostView.activeMenuType == .cameraSliderMenu) {
-                    cariocaMenuViewController?.menuToDefault()
+                    self.toggleCariocaIndicatorPin()
                 }
                 
                 hideActiveSetting() { _ in
@@ -505,13 +506,22 @@ class FirstViewController:
 
         view.addSubview((cameraSecondaryOptions?.view)!)
 
-        cameraSecondaryOptions?.view.transform = CGAffineTransform.init(translationX: view.bounds.width-(cameraSecondaryOptions?.view.bounds.width)! + 5, y: view.bounds.height - (cameraSecondaryOptions?.view.bounds.height)! - 100)
+        var viewHeight = view.bounds.height
+        
+        if #available(iOS 11.0, *) {
+            let window = UIApplication.shared.windows.first
+            if (window != nil) {
+                viewHeight = window!.safeAreaLayoutGuide.layoutFrame.height
+            }
+        }
+        
+        cameraSecondaryOptions?.view.transform = CGAffineTransform.init(translationX: view.bounds.width-(cameraSecondaryOptions?.view.bounds.width)! + 5, y: viewHeight - (cameraSecondaryOptions?.view.bounds.height)! - 80)
         
         cameraResolutionSideMenu = self.storyboard?.instantiateViewController(withIdentifier: "ResolutionSideMenuViewController") as? ResolutionSideMenuViewController
         
         view.addSubview((cameraResolutionSideMenu?.view)!)
 
-        cameraResolutionSideMenu?.view.transform = CGAffineTransform.init(translationX: -2, y: view.bounds.height - (cameraResolutionSideMenu?.view.bounds.height)! - 56)
+        cameraResolutionSideMenu?.view.transform = CGAffineTransform.init(translationX: -2, y: viewHeight - (cameraResolutionSideMenu?.view.bounds.height)! - 36)
         
         cameraResolutionSideMenu?.setTouchEndCb(cb: onShowResOptions)
 
@@ -533,15 +543,33 @@ class FirstViewController:
             self.cameraResolutionSideMenu?.view.isHidden = false
             self.enablePermsView.isHidden = true
 
-            if (self.optionsMenu?.hostView != nil) {
-                Timer.scheduledTimer(withTimeInterval: 0.3, repeats: false, block: {[unowned self] _ in
-                    self.optionsMenu?.showIndicator(.right, position: .bottom, offset: -50)
-                })
-            }
+            self.toggleCariocaIndicatorPin()
             
             //todo -> reload UI method
             self.cameraResolutionSideMenu?.resModePicker.reloadComponent(0)
         })
+    }
+    
+    private func toggleCariocaIndicatorPin(isEnabled: Bool = true) {
+        
+        if (self.optionsMenu?.hostView == nil) {
+            optionsMenu?.addInView(self.view)
+        }
+        
+        var yOffset: CGFloat = -50
+        
+        if #available(iOS 11.0, *) {
+            let window = UIApplication.shared.windows.first
+            if (window != nil) {
+                yOffset = -(view.bounds.height - window!.safeAreaLayoutGuide.layoutFrame.height) - 30
+            }
+        }
+        
+        if(!isEnabled) {
+            yOffset = 50
+        }
+        
+        self.optionsMenu?.showIndicator(.right, position: .bottom, offset: yOffset)
     }
 
     private func disableUi(_ areAnyStatesNotDetermined: Bool = false) {
@@ -557,9 +585,8 @@ class FirstViewController:
         hideActiveSetting { (AnyObject) in
             print("done hiding")
         }
-        if (optionsMenu?.hostView != nil) {
-            optionsMenu?.showIndicator(.right, position: .bottom, offset: 50)
-        }
+        
+        self.toggleCariocaIndicatorPin(isEnabled: false)
     }
 
     private func setupCameraSettingsSwipeMenu() {

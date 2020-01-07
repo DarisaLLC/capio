@@ -146,12 +146,12 @@
 			remoteGlobalIDString = 37E25FF41D32DB6D00644207;
 			remoteInfo = camTest1;
 		};
-		BB2C50D921D919E900E93634 /* PBXContainerItemProxy */ = {
+		BBF9BACC23C32A4B00BB263E /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 3779377C1D45A334004C86A4 /* Pods.xcodeproj */;
 			proxyType = 2;
-			remoteGlobalIDString = 0A696E53A95209A38CF9CA48C38ED02B;
-			remoteInfo = RxAtomic;
+			remoteGlobalIDString = 31E27033A7223087F8D90A901A9C6B15;
+			remoteInfo = RxRelay;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -262,9 +262,9 @@
 				377937891D45A335004C86A4 /* Pods_capio.framework */,
 				3779378B1D45A335004C86A4 /* Pods_capioTests.framework */,
 				3779378D1D45A335004C86A4 /* Pods_capioUITests.framework */,
-				BB2C50DA21D919E900E93634 /* RxAtomic.framework */,
 				370B6D3D1E82B30000B51A1B /* RxBlocking.framework */,
 				370B6D3F1E82B30000B51A1B /* RxCocoa.framework */,
+				BBF9BACD23C32A4B00BB263E /* RxRelay.framework */,
 				370B6D411E82B30000B51A1B /* RxSwift.framework */,
 				370B6D431E82B30000B51A1B /* RxTest.framework */,
 				3749F3CA1E399D4B00A39DFA /* ScalePicker.framework */,
@@ -629,11 +629,11 @@
 			remoteRef = 37DF9EF31DB4425500BBBF72 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		BB2C50DA21D919E900E93634 /* RxAtomic.framework */ = {
+		BBF9BACD23C32A4B00BB263E /* RxRelay.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
-			path = RxAtomic.framework;
-			remoteRef = BB2C50D921D919E900E93634 /* PBXContainerItemProxy */;
+			path = RxRelay.framework;
+			remoteRef = BBF9BACC23C32A4B00BB263E /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -1011,10 +1011,12 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 2N23H46X83;
 				INFOPLIST_FILE = capio/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 1.0.5;
+				MARKETING_VERSION = 2.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.theromanapps.capio;
 				PRODUCT_NAME = capio;
 				PROVISIONING_PROFILE = "";
@@ -1031,10 +1033,12 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 2N23H46X83;
 				INFOPLIST_FILE = capio/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 1.0.5;
+				MARKETING_VERSION = 2.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.theromanapps.capio;
 				PRODUCT_NAME = capio;
 				PROVISIONING_PROFILE = "";
