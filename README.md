@@ -42,13 +42,17 @@ no bulshit ads, promotions or social integration, just pure camera with extended
   - flash mode toggle
   - grid toggle and quad grid
   - camera timer (3x, 10x)
+
+### TODO release 2.1.0:
+  - multi-cameras support
   
-### TODO release 1.0.5:
-  - save user settings
-  - switch back to all auto shortcut button
+### TODO release 2.0.1:
+  - fix layout issue on >iPhone1X (need to buy a new phone just  for that, thanks apple)
   - some bug fixing (per crash reports)
   
 ### TODO:
+  - save user settings
+  - switch back to all auto shortcut button
   - pixel shader implementation -> reflection shader
   - UI\Unit tests (help needed)
   - 3d motion feature point tracking
