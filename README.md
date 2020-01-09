@@ -45,10 +45,11 @@ no bulshit ads, promotions or social integration, just pure camera with extended
 
 ### TODO release 2.1.0:
   - multi-cameras support
+  - fix layout issue on >iPhone1X (need to buy a new phone just  for that, thanks apple)
   
 ### TODO release 2.0.1:
-  - fix layout issue on >iPhone1X (need to buy a new phone just  for that, thanks apple)
-  - some bug fixing (per crash reports)
+  - fix https://github.com/ronanamsterdam/capio/issues/33
+  - fix https://github.com/ronanamsterdam/capio/issues/34 
   
 ### TODO:
   - save user settings
