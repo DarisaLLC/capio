@@ -18,7 +18,7 @@ no bulshit ads, promotions or social integration, just pure camera with extended
   pod install --verbose
 ```
 ### Current Status:
-  20-01-09
+  2020-01-09
   - a cripling update from swift3 to swift5 is done and app's working state is restored
   - new version 2.0.0 is published
 
