@@ -91,6 +91,7 @@ class FirstViewController:
 
     //flag that determines if a user gave all required perms: photo library, video, microphone
     private var isAppUsable:                    Bool = false
+    private var isPhotoOnly:                    Bool = false
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -205,7 +206,7 @@ class FirstViewController:
     }
 
     @objc func startStopRecording() {
-        if isAppUsable {
+        if isAppUsable && !isPhotoOnly {
             self.captureSessionManager.startStopRecording()
         }
     }
@@ -315,6 +316,13 @@ class FirstViewController:
             }
         }
     }
+    
+    private func getIsAppUsable(isVideoEnabled: Bool, isAudioEnabled: Bool, isPhotoLibraryEnabled: Bool) -> Bool {
+        let isPhotoAndVideo = isVideoEnabled && isAudioEnabled && isPhotoLibraryEnabled
+        isPhotoOnly = isVideoEnabled && !isAudioEnabled && isPhotoLibraryEnabled
+        
+        return isPhotoAndVideo || isPhotoOnly
+    }
 
     @objc func requestPhotoVideoAudioPerms() {
         let videoAuthState      = AVCaptureDevice.authorizationStatus(for: AVMediaType.video)
@@ -334,18 +342,17 @@ class FirstViewController:
                         if (!isPhotoLibraryEnabled) {
                             PHPhotoLibrary.requestAuthorization({ (authorizationStatus: PHAuthorizationStatus) -> Void in
                                 isPhotoLibraryEnabled = authorizationStatus == PHAuthorizationStatus.authorized
-                                self.isAppUsable = isVideoEnabled && isAudioEnabled && isPhotoLibraryEnabled
+                                self.isAppUsable = self.getIsAppUsable(isVideoEnabled: isVideoEnabled, isAudioEnabled: isAudioEnabled, isPhotoLibraryEnabled: isPhotoLibraryEnabled)
                             })
                         }
                     });
                 }
             });
         }
-        isAppUsable = isVideoEnabled && isAudioEnabled && isPhotoLibraryEnabled
+
+        isAppUsable = self.getIsAppUsable(isVideoEnabled: isVideoEnabled, isAudioEnabled: isAudioEnabled, isPhotoLibraryEnabled: isPhotoLibraryEnabled)
         if (isAppUsable) {
-
-            self.captureSessionManager.resetCaptureSession(camView: myCamView)
-
+            self.captureSessionManager.resetCaptureSession(camView: myCamView, isPhotoOnly: isPhotoOnly)
             enableUi()
         } else {
             let areAnyStatesNotDetermined = videoAuthState == AVAuthorizationStatus.notDetermined ||
@@ -540,8 +547,14 @@ class FirstViewController:
         UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseIn, animations: {
             self.doPhotoBtn.isEnabled = true
             self.doPhotoBtn.alpha = 1
-            self.doVideoBtn.isEnabled = true
-            self.doVideoBtn.alpha = 1
+            
+            if self.isPhotoOnly {
+                self.disableVideoRecording()
+            } else {
+                self.doVideoBtn.isEnabled = true
+                self.doVideoBtn.alpha = 1
+            }
+            
             self.cameraSecondaryOptions?.view.isHidden = false
             self.cameraResolutionSideMenu?.view.isHidden = false
             self.enablePermsView.isHidden = true
@@ -575,6 +588,11 @@ class FirstViewController:
         self.optionsMenu?.showIndicator(.right, position: .bottom, offset: yOffset)
     }
 
+    private func disableVideoRecording(_ areAnyStatesNotDetermined: Bool = false) {
+        doVideoBtn.isEnabled = false
+        doVideoBtn.alpha = 0.4
+    }
+    
     private func disableUi(_ areAnyStatesNotDetermined: Bool = false) {
         doPhotoBtn.isEnabled = false
         doPhotoBtn.alpha = 0.4

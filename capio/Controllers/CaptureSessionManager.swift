@@ -21,7 +21,7 @@ class CaptureSessionManager:
     AVCapturePhotoCaptureDelegate,
 AVCaptureAudioDataOutputSampleBufferDelegate {
 
-    //this is how a roll singletons here
+    //this is how I roll singletons here
     static let sharedInstance : CaptureSessionManager = {
         let instance = CaptureSessionManager()
         return instance
@@ -31,7 +31,7 @@ AVCaptureAudioDataOutputSampleBufferDelegate {
     let EXPOSURE_DURATION_POWER:            Float       = 4.0 //the exposure slider gain
     let EXPOSURE_MINIMUM_DURATION:          Float64     = 1.0/2000.0
     let SUPPORTED_ASPECT_RATIO:             Double      = 1280/720
-
+    
     private class DebounceAccumulator: NSObject {
 
         static let DEFAULT_DEBOUNCE_COUNT:         Int     = 30
@@ -409,11 +409,13 @@ AVCaptureAudioDataOutputSampleBufferDelegate {
         }
     }
 
-    func resetCaptureSession(camView: UIView) {
+    func resetCaptureSession(camView: UIView, isPhotoOnly: Bool) {
 
-        self.setAudioSession()
+        if !isPhotoOnly {
+            self.setAudioSession()
+        }
         if !(captureSession?.isRunning)! {
-            self.startCaptureSession(camView)
+            self.startCaptureSession(camView, isPhotoOnly: isPhotoOnly)
         }
         self.restartMotionManager()
     }
@@ -529,7 +531,7 @@ AVCaptureAudioDataOutputSampleBufferDelegate {
     }
 
     //2.
-    private func startCaptureSession(_ camView: UIView) {
+    private func startCaptureSession(_ camView: UIView, isPhotoOnly: Bool) {
 
         var videoDeviceInput: AVCaptureInput!
 
@@ -550,21 +552,22 @@ AVCaptureAudioDataOutputSampleBufferDelegate {
         let audioDevice = AVCaptureDevice.default(for: .audio)
 
         let audioDeviceInput: AVCaptureDeviceInput
+        
+        if (!isPhotoOnly) {
+            do {
+                audioDeviceInput = try AVCaptureDeviceInput(device: audioDevice!)
+                captureSession?.canAddInput(audioDeviceInput)
+            }
+            catch {
+                fatalError("[startCaptureSession]Could not create AVCaptureDeviceInput instance with error: \(error).")
+            }
 
-        do {
-            audioDeviceInput = try AVCaptureDeviceInput(device: audioDevice!)
-            captureSession?.canAddInput(audioDeviceInput)
+            guard (captureSession?.canAddInput(audioDeviceInput))! else {
+                fatalError()
+            }
+            
+            captureSession?.addInput(audioDeviceInput as AVCaptureInput)
         }
-        catch {
-            fatalError("[startCaptureSession]Could not create AVCaptureDeviceInput instance with error: \(error).")
-        }
-
-        guard (captureSession?.canAddInput(audioDeviceInput))! else {
-            fatalError()
-        }
-
-        captureSession?.addInput(audioDeviceInput as AVCaptureInput)
-
 
         captureStillImageOut = AVCapturePhotoOutput()
 
