@@ -42,6 +42,7 @@ no bulshit ads, promotions or social integration, just pure camera with extended
   - flash mode toggle
   - grid toggle and quad grid
   - camera timer (3x, 10x)
+  - you can do just photos without giving perms to video (audio recording perms)
 
 ### TODO release 2.2.0:
   - multi-cameras support
