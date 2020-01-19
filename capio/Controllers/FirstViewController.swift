@@ -210,8 +210,8 @@ class FirstViewController:
         }
     }
 
-    @objc func onAppBackgroundStateEnter() {
-        print("[onAppBackgroundStateEnter] start")
+    @objc func applicationDidEnterBackground() {
+        print("[applicationDidEnterBackground] start")
         onDispose()
     }
 
@@ -404,6 +404,9 @@ class FirstViewController:
 
     private func onDispose(dealocateViews: Bool = true) {
         print("[onDispose] disposing")
+        
+        self.optionsMenu?.hideMenu()
+        
         self.captureSessionManager.onSessionDispose()
         
         //cuz zoomView has a bounce timer
@@ -425,7 +428,7 @@ class FirstViewController:
 
         //each time you spawn application back -> this observer gonna be triggered
         NotificationCenter.default.addObserver(self, selector: #selector(FirstViewController.requestPhotoVideoAudioPerms), name: UIApplication.didBecomeActiveNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(FirstViewController.onAppBackgroundStateEnter), name: UIApplication.didEnterBackgroundNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(FirstViewController.applicationDidEnterBackground), name: UIApplication.didEnterBackgroundNotification, object: nil)
 
         captureSessionManager.cameraSettingsObservable.subscribe(onNext: { (newCameraSettings: CameraSessionSettings) in
             let isFlashAvailable = newCameraSettings.isFlashAvailable
