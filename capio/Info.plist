@@ -31,7 +31,7 @@
 	<key>NSCameraUsageDescription</key>
 	<string>cap/IO needs your camera acccess to capure photos and videos.</string>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>cap/IO needs your microphone access to record videos with sound.</string>
+	<string>cap/IO needs your microphone access to record videos. Without it video recording will be disabled. But you can still do photos.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>cap/IO needs access to your photo library in order to store recorded videos and photos on your device.</string>
 	<key>UILaunchStoryboardName</key>

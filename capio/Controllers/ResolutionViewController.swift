@@ -16,12 +16,14 @@ enum ResMenuType{
 
 class LabelCell: UITableViewCell{
     
+    var _videoResDimensions: CMVideoDimensions = CMVideoDimensions.init()
+    
     var videoResDimensions: CMVideoDimensions {
         set {
             videResLabel.text = String(newValue.width) + "x" + String(newValue.height)
         }
         get {
-            return self.videoResDimensions
+            return self._videoResDimensions
         }
     }
     
@@ -30,7 +32,7 @@ class LabelCell: UITableViewCell{
             photoResLabel.text = String(newValue.width) + "x" + String(newValue.height)
         }
         get {
-            return self.videoResDimensions
+            return self._videoResDimensions
         }
     }
     
@@ -102,7 +104,7 @@ class ResolutionViewController: UIViewController, UIPickerViewDelegate, UIPicker
     private func onPickerRowSelected(_ row: Int) {
         let cell = tableView.cellForRow(at: IndexPath.init(row: 0, section: 0)) as! LabelCell
         
-        cell.videoResDimensions = captureSessionManager.resolutionFormatsArray[row].videoResolution
+        cell._videoResDimensions = captureSessionManager.resolutionFormatsArray[row].videoResolution
         cell.photoResDimensions = captureSessionManager.resolutionFormatsArray[row].photoResolution
         
         cell.fpsLabel.text = String(Int(captureSessionManager.resolutionFormatsArray[row].fpsRange.maxFrameRate))
@@ -154,7 +156,7 @@ class ResolutionViewController: UIViewController, UIPickerViewDelegate, UIPicker
                 let newFormat = newCameraSettings.activeResFormat!
                 self.currentBuffedFormat = newCameraSettings.activeResFormat
                 //todo: figure a better way to pass the index right away here instead of lookup
-                let rowIndex = self.captureSessionManager.resolutionFormatsArray.index { (format: ResolutionFormat) -> Bool in
+                let rowIndex = self.captureSessionManager.resolutionFormatsArray.firstIndex { (format: ResolutionFormat) -> Bool in
                     return format.photoResolution.width == newFormat.photoResolution.width && format.videoResolution.height == newFormat.videoResolution.height && format.name == newFormat.name && format.fpsRange == newFormat.fpsRange && format.isSlomo == newFormat.isSlomo
                 }
                 

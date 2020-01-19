@@ -21,7 +21,7 @@ class CaptureSessionManager:
     AVCapturePhotoCaptureDelegate,
 AVCaptureAudioDataOutputSampleBufferDelegate {
 
-    //this is how a roll singletons here
+    //this is how I roll singletons here
     static let sharedInstance : CaptureSessionManager = {
         let instance = CaptureSessionManager()
         return instance
@@ -31,7 +31,7 @@ AVCaptureAudioDataOutputSampleBufferDelegate {
     let EXPOSURE_DURATION_POWER:            Float       = 4.0 //the exposure slider gain
     let EXPOSURE_MINIMUM_DURATION:          Float64     = 1.0/2000.0
     let SUPPORTED_ASPECT_RATIO:             Double      = 1280/720
-
+    
     private class DebounceAccumulator: NSObject {
 
         static let DEFAULT_DEBOUNCE_COUNT:         Int     = 30
@@ -396,7 +396,7 @@ AVCaptureAudioDataOutputSampleBufferDelegate {
             }
         }
 
-        if let outputs = captureSession?.outputs as? [AVCaptureOutput] {
+        if let outputs = captureSession?.outputs {
             for output in outputs {
                 captureSession?.removeOutput(output)
             }
@@ -409,11 +409,13 @@ AVCaptureAudioDataOutputSampleBufferDelegate {
         }
     }
 
-    func resetCaptureSession(camView: UIView) {
+    func resetCaptureSession(camView: UIView, isPhotoOnly: Bool) {
 
-        self.setAudioSession()
+        if !isPhotoOnly {
+            self.setAudioSession()
+        }
         if !(captureSession?.isRunning)! {
-            self.startCaptureSession(camView)
+            self.startCaptureSession(camView, isPhotoOnly: isPhotoOnly)
         }
         self.restartMotionManager()
     }
@@ -441,8 +443,6 @@ AVCaptureAudioDataOutputSampleBufferDelegate {
                     // todo: rvisit this
                     setPreviewLayerOrientation(currentOrientation)
                 }
-            default:
-                break
         }
     }
 
@@ -513,7 +513,7 @@ AVCaptureAudioDataOutputSampleBufferDelegate {
             audioSession = AVAudioSession.sharedInstance()
             // in case you have music plaing in your phone
             // it will not get muted thanks to that AND! automaticallyConfiguresApplicationAudioSession
-            try audioSession?.setCategory(.playAndRecord, options: .mixWithOthers)
+            try audioSession?.setCategory(.playAndRecord, options: [.allowBluetoothA2DP, .allowBluetooth, .mixWithOthers])
             let currentOutputPortNames = (audioSession?.currentRoute as AVAudioSessionRouteDescription?)?.outputs
             var currentOutputPortName = AVAudioSession.Port.builtInSpeaker
             if (currentOutputPortNames!.count > 0) {
@@ -531,7 +531,7 @@ AVCaptureAudioDataOutputSampleBufferDelegate {
     }
 
     //2.
-    private func startCaptureSession(_ camView: UIView) {
+    private func startCaptureSession(_ camView: UIView, isPhotoOnly: Bool) {
 
         var videoDeviceInput: AVCaptureInput!
 
@@ -552,22 +552,22 @@ AVCaptureAudioDataOutputSampleBufferDelegate {
         let audioDevice = AVCaptureDevice.default(for: .audio)
 
         let audioDeviceInput: AVCaptureDeviceInput
+        
+        if (!isPhotoOnly) {
+            do {
+                audioDeviceInput = try AVCaptureDeviceInput(device: audioDevice!)
+                captureSession?.canAddInput(audioDeviceInput)
+            }
+            catch {
+                fatalError("[startCaptureSession]Could not create AVCaptureDeviceInput instance with error: \(error).")
+            }
 
-        do {
-            audioDeviceInput = try AVCaptureDeviceInput(device: audioDevice!)
-
-            try captureSession?.canAddInput(audioDeviceInput)
+            guard (captureSession?.canAddInput(audioDeviceInput))! else {
+                fatalError()
+            }
+            
+            captureSession?.addInput(audioDeviceInput as AVCaptureInput)
         }
-        catch {
-            fatalError("[startCaptureSession]Could not create AVCaptureDeviceInput instance with error: \(error).")
-        }
-
-        guard (captureSession?.canAddInput(audioDeviceInput))! else {
-            fatalError()
-        }
-
-        captureSession?.addInput(audioDeviceInput as AVCaptureInput)
-
 
         captureStillImageOut = AVCapturePhotoOutput()
 
@@ -610,7 +610,7 @@ AVCaptureAudioDataOutputSampleBufferDelegate {
 
         //reseting res array
         resolutionFormatsArray = [ResolutionFormat]()
-        for vFormat in self.captureDevice!.formats as! [AVCaptureDevice.Format] {
+        for vFormat in self.captureDevice!.formats {
 
             let formatDescription = CMVideoFormatDescriptionGetDimensions(vFormat.formatDescription)
 
@@ -620,7 +620,7 @@ AVCaptureAudioDataOutputSampleBufferDelegate {
                 continue
             }
 
-            let ranges = (vFormat as AnyObject).videoSupportedFrameRateRanges as! [AVFrameRateRange]
+            let ranges = (vFormat as AnyObject).videoSupportedFrameRateRanges!
             let frameRateObj: AVFrameRateRange = ranges[0]
 
             if (resolutionFormatsArray.count == 0) {
@@ -1017,7 +1017,7 @@ AVCaptureAudioDataOutputSampleBufferDelegate {
         }
     }
 
-    private func setAndEmitCameraSettings(_ captureDevice: AVCaptureDevice) {
+    private func setAndEmitCameraSettings(_ captureDevice: AVCaptureDevice!) {
         if !isSettingAdjustble(CameraOptionsTypes.iso) {
             isoValue = getValueWithinRange(
                 value: captureDevice.iso,
@@ -1028,19 +1028,22 @@ AVCaptureAudioDataOutputSampleBufferDelegate {
 
         if !isSettingAdjustble(CameraOptionsTypes.temperature) {
             currentColorGains = captureDevice.deviceWhiteBalanceGains
-            currentColorTemperature = captureDevice.temperatureAndTintValues(for: currentColorGains)
-            temperatureValue = currentColorTemperature.temperature
+            if (currentColorGains != nil) {
+                currentColorTemperature = captureDevice.temperatureAndTintValues(for: currentColorGains)
+                temperatureValue = currentColorTemperature.temperature
+            }
         }
 
         if !isSettingAdjustble(CameraOptionsTypes.shutter) {
             exposureDuration = captureDevice.exposureDuration
+            if (exposureDuration != nil) {
+                let minDurationSeconds: Double  = max(CMTimeGetSeconds(captureDevice.activeFormat.minExposureDuration), EXPOSURE_MINIMUM_DURATION);
+                let maxDurationSeconds: Double = CMTimeGetSeconds(captureDevice.activeFormat.maxExposureDuration);
 
-            let minDurationSeconds: Double  = max(CMTimeGetSeconds(captureDevice.activeFormat.minExposureDuration), EXPOSURE_MINIMUM_DURATION);
-            let maxDurationSeconds: Double = CMTimeGetSeconds(captureDevice.activeFormat.maxExposureDuration);
-
-            shutterValue = pow(
-                Float(max(0,(CMTimeGetSeconds(exposureDuration) - minDurationSeconds) / (maxDurationSeconds - minDurationSeconds))),
-                1/EXPOSURE_DURATION_POWER)
+                shutterValue = pow(
+                    Float(max(0,(CMTimeGetSeconds(exposureDuration) - minDurationSeconds) / (maxDurationSeconds - minDurationSeconds))),
+                    1/EXPOSURE_DURATION_POWER)
+            }
         }
 
         if !isSettingAdjustble(CameraOptionsTypes.focus) {

@@ -111,7 +111,7 @@ class ResolutionSideMenuViewController:
                 let newFormat = newCameraSettings.activeResFormat!
                 self.currentBuffedFormat = newCameraSettings.activeResFormat!
                 //todo: figure a better way to pass the index right away here instead of lookup
-                let rowIndex = self.captureSessionManager.resolutionFormatsArray.index { (format: ResolutionFormat) -> Bool in
+                let rowIndex = self.captureSessionManager.resolutionFormatsArray.firstIndex { (format: ResolutionFormat) -> Bool in
                     return format.photoResolution.width == newFormat.photoResolution.width && format.videoResolution.height == newFormat.videoResolution.height && format.name == newFormat.name && format.fpsRange == newFormat.fpsRange && format.isSlomo == newFormat.isSlomo
                 }
                 
